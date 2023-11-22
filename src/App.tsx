@@ -1,33 +1,32 @@
 import React, {useState} from 'react';
 import './App.css';
 import TodoList, {TaskType} from './TodoList';
+import {v1} from 'uuid';
 
-// CRUD create read+ update delete+
-
+// CRUD create+ read+ update delete+
 function App() {
   //-- BLL business logic layer - это наши данные и логика их изменений :
   const TodoListTitle: string = 'What to learn'
 
-  // state
-  // const tasks: Array<TaskType> = [
-  //   {id: 1, title: "HTML", isDone: true},
-  //   {id: 2, title: "JS/ES6", isDone: false},
-  //   {id: 3, title: "React", isDone: false},
-  // ]
-
   const [tasks, setTasks] = useState<Array<TaskType>>([ // initial state
-    {id: 1, title: 'HTML', isDone: true},
-    {id: 2, title: 'JS/ES6', isDone: false},
-    {id: 3, title: 'React', isDone: false},
+    {id: v1(), title: 'HTML', isDone: true},
+    {id: v1(), title: 'JS/ES6', isDone: false},
+    {id: v1(), title: 'React', isDone: false},
   ])
 
   // delete
-  const removeTask = (taskId: number) => {
-    const nextState: Array<TaskType> = []
-    for (let i = 0; i < tasks.length; i++) {
-      if (tasks[i].id !== taskId) nextState.push(tasks[i])
+  const removeTask = (taskId: string) => {
+    setTasks(tasks.filter(t => t.id !== taskId))
+  }
+
+// create task
+  const addTask = (title: string) => {
+    const newTask: TaskType = {
+      id: v1(),
+      title: title,
+      isDone: false,
     }
-    setTasks(nextState)
+    setTasks([newTask, ...tasks])
   }
 
 //-- UI user interface :
@@ -37,6 +36,7 @@ function App() {
         title={TodoListTitle}
         tasks={tasks}
         removeTask={removeTask}
+        addTask={addTask}
       />
     </div>
   )

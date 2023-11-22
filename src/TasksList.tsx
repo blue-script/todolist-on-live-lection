@@ -4,7 +4,7 @@ import {TaskType, TodoListPropsType} from './TodoList';
 
 type TasksListPropsType = {
   tasks: Array<TaskType>
-  removeTask: (taskId: number) => void
+  removeTask: (taskId: string) => void
 }
 
 type FilterValueType = 'all' | 'active' | 'completed'
@@ -19,7 +19,7 @@ const TasksList: React.FC<TasksListPropsType> = ({tasks, removeTask}) => {
     ? <span>Your tasks list is empty</span>
     : <ul>
       {
-        filteredTasks.map((t: TaskType)=> {
+        filteredTasks.map((t: TaskType) => {
           const onClickRemoveTask = () => removeTask(t.id)
           return <li>
             <input type="checkbox" checked={t.isDone}/>
@@ -34,8 +34,8 @@ const TasksList: React.FC<TasksListPropsType> = ({tasks, removeTask}) => {
   const onClickSetActiveFilter = () => setFilter('active')
   const onClickSetCompletedFilter = () => setFilter('completed')
   return (
-    <div className='tasksList'>
-        {listItems}
+    <div className="tasksList">
+      {listItems}
       <div>
         <Button name="All" onClickHandler={onClickSetAllFilter}/>
         <Button name="Active" onClickHandler={onClickSetActiveFilter}/>

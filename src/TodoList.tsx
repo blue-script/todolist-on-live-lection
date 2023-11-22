@@ -1,61 +1,59 @@
-import React, {FC} from 'react';
-import Button from "./Button";
-import Task from "./Task";
+import React, {ChangeEvent, FC, useState, KeyboardEvent} from 'react';
+import Button from './Button';
 import TasksList from './TasksList';
-import task from './Task';
 
 export type TodoListPropsType = {
   title: string
   tasks: Array<TaskType>
-  removeTask: (taskId: number) => void
+  removeTask: (taskId: string) => void
+  addTask: (title: string) => void
 }
 
 export type TaskType = {
-  id: number
+  id: string
   title: string
   isDone: boolean
 }
 
-const TodoList: FC<TodoListPropsType> = ({title, tasks, removeTask}) => {
-  // 1. старый способ
-  // const title = props.title
-  // const tasks: Array<TaskType> = props.tasks
-  // 2. современный способ
-  // const {title: title, tasks: tasks} = props
-  // 3. еще более усовершенствованный
-  // const {title, tasks} = props
+const TodoList: FC<TodoListPropsType> = ({title, tasks, removeTask, addTask}) => {
 
-  // const listItems: Array<JSX.Element> = []
-  // for (let i = 0; i < tasks.length; i++) {
-  //   const onClickRemoveTask = () => removeTask(tasks[i].id)
-  //   const listItem: JSX.Element = <li>
-  //     <input type="checkbox" checked={tasks[i].isDone}/>
-  //     <span>{tasks[i].title}</span>
-  //     <Button name='x' onClickHandler={onClickRemoveTask}/>
-  //   </li>
-  //   listItems.push(listItem)
-    // listItems.push(<Task {...tasks[i]} />)
-  // }
+  const [newTaskTitle, setNewTaskTitle] = useState('')
+  const onClickAddTask = () => {
+    addTask(newTaskTitle)
+    setNewTaskTitle('')
+  }
+  const maxTitleLengthError = newTaskTitle.length >= 15
+
+  const onChangeSetTitle = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.currentTarget.value.length <= 15) {
+      setNewTaskTitle(e.currentTarget.value)
+    }
+  }
+
+  const onKeyDownAddTask = (e: KeyboardEvent<HTMLInputElement>)=>{
+    e.key === 'Enter'
+    && Boolean(newTaskTitle)
+    && newTaskTitle.length < 15
+    && onClickAddTask()
+  }
 
   return (
-      <div className="todoList">
-        <h3>{title}</h3>
-        <div>
-          <input/>
-          <Button name="+" onClickHandler={()=>{}}/>
-        </div>
-
-        <TasksList tasks={tasks} removeTask={removeTask}/>
-
-        {/*<ul>*/}
-        {/*  {listItems}*/}
-        {/*</ul>*/}
-        {/*<div>*/}
-        {/*  <Button name="All" onClickHandler={()=>{}}/>*/}
-        {/*  <Button name="Active" onClickHandler={()=>{}}/>*/}
-        {/*  <Button name="Completed" onClickHandler={()=>{}}/>*/}
-        {/*</div>*/}
+    <div className="todoList">
+      <h3>{title}</h3>
+      <div>
+        <input
+          value={newTaskTitle}
+          onChange={onChangeSetTitle}
+          onKeyDown={onKeyDownAddTask}
+        />
+        <Button name="+"
+                onClickHandler={onClickAddTask}
+                disabled={!newTaskTitle || maxTitleLengthError}/>
+        {maxTitleLengthError && <div style={{color: 'red'}}>Your task title is too long</div>}
       </div>
+
+      <TasksList tasks={tasks} removeTask={removeTask}/>
+    </div>
   )
 }
 

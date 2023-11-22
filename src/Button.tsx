@@ -3,13 +3,16 @@ import React from 'react';
 type ButtonPropsType = {
   name: string
   onClickHandler: () => void
+  disabled?: boolean
 }
 
 const Button: React.FC<ButtonPropsType> = (props) => {
   return (
-      <button onClick={props.onClickHandler}>
-        {props.name}
-      </button>
+    <button
+      disabled={props.disabled}
+      onClick={props.onClickHandler}>
+      {props.name}
+    </button>
   );
 };
 
