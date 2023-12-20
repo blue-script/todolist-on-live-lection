@@ -2,8 +2,10 @@ import React, {ChangeEvent} from 'react';
 import {FilterValuesType} from './App';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
-import {Button, Checkbox, IconButton} from '@mui/material';
-import {Delete} from '@mui/icons-material';
+import IconButton from '@mui/material/IconButton';
+import DeleteIcon from '@mui/icons-material/Delete';
+import Button from '@mui/material/Button';
+import Checkbox from '@mui/material/Checkbox';
 
 export type TaskType = {
   id: string
@@ -42,13 +44,14 @@ export function Todolist(props: PropsType) {
   const onCompletedClickHandler = () => props.changeFilter('completed', props.id);
 
   return <div>
-    <h3><EditableSpan value={props.title} onChange={changeTodolistTitle}/>
-      <IconButton onClick={removeTodolist}>
-        <Delete/>
+    <h3>
+      <EditableSpan value={props.title} onChange={changeTodolistTitle}/>
+      <IconButton aria-label='delete' onClick={removeTodolist}>
+        <DeleteIcon/>
       </IconButton>
     </h3>
     <AddItemForm addItem={addTask}/>
-    <div>
+    <ul>
       {
         props.tasks.map(t => {
           const onClickHandler = () => props.removeTask(t.id, props.id)
@@ -61,38 +64,26 @@ export function Todolist(props: PropsType) {
           }
 
 
-          return <div key={t.id} className={t.isDone ? 'is-done' : ''}>
-            <Checkbox color="secondary" onChange={onChangeHandler} checked={t.isDone}/>
+          return <li key={t.id} className={t.isDone ? 'is-done' : ''}>
+            <Checkbox onChange={onChangeHandler} checked={t.isDone}/>
             <EditableSpan value={t.title} onChange={onTitleChangeHandler}/>
-            <IconButton onClick={onClickHandler}>
-              <Delete/>
+            <IconButton aria-label='delete' onClick={onClickHandler}>
+              <DeleteIcon/>
             </IconButton>
-          </div>
+          </li>
         })
       }
-    </div>
+    </ul>
     <div>
-      <Button
-        color={'inherit'}
-        variant={props.filter === 'all' ? 'contained' : 'outlined'}
-        onClick={onAllClickHandler}
-      >
-        All
-      </Button>
-      <Button
-        color='primary'
-        variant={props.filter === 'active' ? 'contained' : 'outlined'}
-        onClick={onActiveClickHandler}
-      >
-        Active
-      </Button>
-      <Button
-        color='secondary'
-        variant={props.filter === 'completed' ? 'contained' : 'outlined'}
-        onClick={onCompletedClickHandler}
-      >
-        Completed
-      </Button>
+        <Button variant={props.filter === 'all' ? 'outlined' : "contained"} color="success" onClick={onAllClickHandler}>
+            All
+        </Button>
+        <Button variant={props.filter === 'active' ? 'outlined' : "contained"} color="error" onClick={onActiveClickHandler}>
+            Active
+        </Button>
+        <Button variant={props.filter === 'completed' ? 'outlined' : "contained"}  onClick={onCompletedClickHandler}>
+            Completed
+        </Button>
     </div>
   </div>
 }
