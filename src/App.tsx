@@ -6,6 +6,8 @@ import {AddItemForm} from './AddItemForm';
 import {AppBar, Button, Container, Grid, Paper, Toolbar, Typography} from "@mui/material";
 import IconButton from "@mui/material/IconButton/IconButton";
 import {Menu} from "@mui/icons-material";
+import {useDispatch, useSelector} from 'react-redux';
+import {AppRootStateType} from './state/store';
 
 
 export type FilterValuesType = "all" | "active" | "completed";
@@ -39,7 +41,6 @@ function App() {
             {id: v1(), title: "React Book", isDone: true}
         ]
     });
-
 
     function removeTask(id: string, todolistId: string) {
         //достанем нужный массив по todolistId:
